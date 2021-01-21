@@ -1,6 +1,6 @@
 /* eslint-disable class-methods-use-this */
 import { MerkleNode } from '../models'
-import { createLeafNode, createInternalNode } from '../utils'
+import { createLeafNode, createIntermediateNode } from '../utils'
 
 export class MerkleTree {
   private root: MerkleNode
@@ -44,7 +44,7 @@ export class MerkleTree {
 
       const leftLeafNode = createLeafNode(leftLeafValue)
       const rightLeafNode = createLeafNode(rightLeafValue)
-      const parent = createInternalNode(leftLeafNode, rightLeafNode)
+      const parent = createIntermediateNode(leftLeafNode, rightLeafNode)
 
       leafLevel.push(parent)
     }
@@ -53,7 +53,7 @@ export class MerkleTree {
       const lastValue = data[length - 1]
 
       const lastNode = createLeafNode(lastValue)
-      const parent = createInternalNode(lastNode)
+      const parent = createIntermediateNode(lastNode)
 
       leafLevel.push(parent)
     }
@@ -73,7 +73,7 @@ export class MerkleTree {
       const leftNode = data[i]
       const rightNode = data[i + 1]
 
-      const parent = createInternalNode(leftNode, rightNode)
+      const parent = createIntermediateNode(leftNode, rightNode)
 
       parents.push(parent)
     }
@@ -81,7 +81,7 @@ export class MerkleTree {
     if (length % 2 !== 0) {
       const lastNode = data[length - 1]
 
-      const parent = createInternalNode(lastNode)
+      const parent = createIntermediateNode(lastNode)
 
       parents.push(parent)
     }

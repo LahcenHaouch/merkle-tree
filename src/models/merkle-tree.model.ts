@@ -1,3 +1,5 @@
+import { Hmac } from 'crypto'
+
 export enum MerkleNodeType {
   INTERMEDIATE = 'INTERMEDIATE',
   LEAF = 'LEAF',
@@ -5,7 +7,7 @@ export enum MerkleNodeType {
 
 export interface MerkleNode {
   type: MerkleNodeType
-  value: string
+  value: Hmac
   left?: MerkleNode
   right?: MerkleNode
 }

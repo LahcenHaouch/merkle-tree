@@ -100,4 +100,8 @@ export class MerkleTree {
   public getHeight(): number {
     return this.height
   }
+
+  public getLevel(level: number): Array<MerkleNode> | undefined {
+    return this.dictionary[level]
+  }
 }

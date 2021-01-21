@@ -1,18 +1,19 @@
-import { createHmac } from 'crypto'
+import { createHash } from 'crypto'
 
 import { MerkleNode, MerkleNodeType } from '../models'
 
-const SECRET = 'not sure what to put here'
-const hasher = createHmac('sha256', SECRET)
+export async function createLeafNode(value: string) {
+  const hash = createHash('sha256')
+    .update(value)
+    .digest('base64')
 
-export function createLeafNode(value: string) {
   return {
     type: MerkleNodeType.LEAF,
-    value: hasher.update(value),
+    value: hash,
   }
 }
 
-export function createIntermediateNode(
+export async function createIntermediateNode(
   leftNode: MerkleNode,
   rightNode?: MerkleNode
 ) {
@@ -20,9 +21,13 @@ export function createIntermediateNode(
 
   if (rightNode) {
     const { value: rightValue } = rightNode
+
+    const hash = createHash('sha256')
+      .update(leftValue + rightValue)
+      .digest('base64')
     return {
       type: MerkleNodeType.INTERMEDIATE,
-      value: hasher.update(leftValue + rightValue),
+      value: hash,
       left: leftNode,
       right: rightNode,
     }

@@ -1,4 +1,3 @@
-/* eslint-disable no-await-in-loop */
 /* eslint-disable class-methods-use-this */
 import { MerkleNode } from '../models'
 import { createLeafNode, createIntermediateNode } from '../utils'

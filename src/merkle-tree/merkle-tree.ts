@@ -8,9 +8,17 @@ export class MerkleTree {
   private height: number
   private dictionary: Array<Array<MerkleNode>>
 
-  constructor() {
+  constructor(data: string[]) {
     this.height = 0
     this.dictionary = []
+    let parents = this.createLeafLevel(data)
+
+    while (parents.length > 1) {
+      parents = this.createIntermediateLevel(parents)
+    }
+
+    this.incrementHeight()
+    this.root = parents[0]
   }
 
   private incrementHeight() {
@@ -21,7 +29,7 @@ export class MerkleTree {
     this.dictionary.push(data)
   }
 
-  private async createLeafLevel(data: string[]) {
+  private createLeafLevel(data: string[]) {
     const length = data.length
 
     if (length < 2) {
@@ -35,9 +43,9 @@ export class MerkleTree {
       const leftLeafValue = data[i]
       const rightLeafValue = data[i + 1]
 
-      const leftLeafNode = await createLeafNode(leftLeafValue)
-      const rightLeafNode = await createLeafNode(rightLeafValue)
-      const parent = await createIntermediateNode(leftLeafNode, rightLeafNode)
+      const leftLeafNode = createLeafNode(leftLeafValue)
+      const rightLeafNode = createLeafNode(rightLeafValue)
+      const parent = createIntermediateNode(leftLeafNode, rightLeafNode)
 
       leafLevel.push(parent)
     }
@@ -45,8 +53,8 @@ export class MerkleTree {
     if (length % 2 !== 0) {
       const lastValue = data[length - 1]
 
-      const lastNode = await createLeafNode(lastValue)
-      const parent = await createIntermediateNode(lastNode)
+      const lastNode = createLeafNode(lastValue)
+      const parent = createIntermediateNode(lastNode)
 
       leafLevel.push(parent)
     }
@@ -57,7 +65,7 @@ export class MerkleTree {
     return leafLevel
   }
 
-  private async createIntermediateLevel(data: Array<MerkleNode>) {
+  private createIntermediateLevel(data: Array<MerkleNode>) {
     const length = data.length
 
     const parents: Array<MerkleNode> = []
@@ -66,7 +74,7 @@ export class MerkleTree {
       const leftNode = data[i]
       const rightNode = data[i + 1]
 
-      const parent = await createIntermediateNode(leftNode, rightNode)
+      const parent = createIntermediateNode(leftNode, rightNode)
 
       parents.push(parent)
     }
@@ -74,7 +82,7 @@ export class MerkleTree {
     if (length % 2 !== 0) {
       const lastNode = data[length - 1]
 
-      const parent = await createIntermediateNode(lastNode)
+      const parent = createIntermediateNode(lastNode)
 
       parents.push(parent)
     }
@@ -83,17 +91,6 @@ export class MerkleTree {
     this.addToDictionary(parents)
 
     return parents
-  }
-
-  public async build(data: string[]) {
-    let parents = await this.createLeafLevel(data)
-
-    while (parents.length > 1) {
-      parents = await this.createIntermediateLevel(parents)
-    }
-
-    this.incrementHeight()
-    this.root = parents[0]
   }
 
   public getRoot(): MerkleNode {

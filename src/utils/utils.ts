@@ -2,7 +2,7 @@ import { createHash } from 'crypto'
 
 import { MerkleNode, MerkleNodeType } from '../models'
 
-export async function createLeafNode(value: string) {
+export function createLeafNode(value: string) {
   const hash = createHash('sha256')
     .update(value)
     .digest('base64')
@@ -13,7 +13,7 @@ export async function createLeafNode(value: string) {
   }
 }
 
-export async function createIntermediateNode(
+export function createIntermediateNode(
   leftNode: MerkleNode,
   rightNode?: MerkleNode
 ) {

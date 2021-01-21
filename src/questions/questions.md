@@ -6,6 +6,8 @@ I can calculate hash(L2) if single node or hash(L1 + L2) and compare to to the v
 
 ## I know only the L3 block and the Merkle root. What minimum information do I need to check that the L3 block and the Merkle root belong to the same Merkle tree?
 
+I need to know the hash of the data contained in the L3 block
+
 ## What are some Merkle tree use cases?
 
 Versioning systems, databases, p2p system

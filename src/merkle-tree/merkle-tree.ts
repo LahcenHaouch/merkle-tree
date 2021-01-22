@@ -4,11 +4,9 @@ import { createLeafNode, createIntermediateNode } from '../utils'
 
 export class MerkleTree {
   private root: MerkleNode
-  private height: number
-  private dictionary: Array<Array<MerkleNode>>
+  dictionary: Array<Array<MerkleNode>>
 
   constructor(data: string[]) {
-    this.height = 0
     this.dictionary = []
     let parents = this.createLeafLevel(data)
 
@@ -16,12 +14,7 @@ export class MerkleTree {
       parents = this.createIntermediateLevel(parents)
     }
 
-    this.incrementHeight()
     this.root = parents[0]
-  }
-
-  private incrementHeight() {
-    this.height += 1
   }
 
   private addToDictionary(data: Array<MerkleNode>) {
@@ -37,6 +30,7 @@ export class MerkleTree {
       )
     }
     const leafLevel: Array<MerkleNode> = []
+    const intermediateLevel: Array<MerkleNode> = []
 
     for (let i = 0; i < length - 1; i += 2) {
       const leftLeafValue = data[i]
@@ -44,9 +38,11 @@ export class MerkleTree {
 
       const leftLeafNode = createLeafNode(leftLeafValue)
       const rightLeafNode = createLeafNode(rightLeafValue)
+      leafLevel.push(leftLeafNode, rightLeafNode)
+
       const parent = createIntermediateNode(leftLeafNode, rightLeafNode)
 
-      leafLevel.push(parent)
+      intermediateLevel.push(parent)
     }
 
     if (length % 2 !== 0) {
@@ -55,13 +51,13 @@ export class MerkleTree {
       const lastNode = createLeafNode(lastValue)
       const parent = createIntermediateNode(lastNode)
 
-      leafLevel.push(parent)
+      intermediateLevel.push(parent)
     }
 
-    this.incrementHeight()
     this.addToDictionary(leafLevel)
+    this.addToDictionary(intermediateLevel)
 
-    return leafLevel
+    return intermediateLevel
   }
 
   private createIntermediateLevel(data: Array<MerkleNode>) {
@@ -86,7 +82,6 @@ export class MerkleTree {
       parents.push(parent)
     }
 
-    this.incrementHeight()
     this.addToDictionary(parents)
 
     return parents
@@ -97,10 +92,19 @@ export class MerkleTree {
   }
 
   public getHeight(): number {
-    return this.height
+    return this.dictionary.length
   }
 
-  public getLevel(level: number): Array<MerkleNode> | undefined {
-    return this.dictionary[level]
+  public getLevel(level: number): Array<string> | undefined {
+    if (level === this.dictionary.length + 1) {
+      return [this.root.value]
+    }
+    const result = this.dictionary[level]
+
+    if (result) {
+      return result.map(({ value }) => value)
+    }
+
+    return undefined
   }
 }

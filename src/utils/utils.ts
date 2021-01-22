@@ -3,13 +3,11 @@ import { createHash } from 'crypto'
 import { MerkleNode, MerkleNodeType } from '../models'
 
 export function createLeafNode(value: string) {
-  const hash = createHash('sha256')
-    .update(value)
-    .digest('base64')
-
   return {
     type: MerkleNodeType.LEAF,
-    value: hash,
+    value: createHash('sha256')
+      .update(value)
+      .digest('base64'),
   }
 }
 
@@ -22,12 +20,13 @@ export function createIntermediateNode(
   if (rightNode) {
     const { value: rightValue } = rightNode
 
-    const hash = createHash('sha256')
+    const value = createHash('sha256')
       .update(leftValue + rightValue)
       .digest('base64')
+
     return {
       type: MerkleNodeType.INTERMEDIATE,
-      value: hash,
+      value,
       left: leftNode,
       right: rightNode,
     }

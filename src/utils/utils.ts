@@ -2,7 +2,7 @@ import { createHash } from 'crypto'
 
 import { MerkleNode, MerkleNodeType } from '../models'
 
-export function createLeafNode(value: string) {
+export function createLeafNode(value: string): MerkleNode {
   return {
     type: MerkleNodeType.LEAF,
     value: createHash('sha256')
@@ -14,7 +14,7 @@ export function createLeafNode(value: string) {
 export function createIntermediateNode(
   leftNode: MerkleNode,
   rightNode?: MerkleNode
-) {
+): MerkleNode {
   const { value: leftValue } = leftNode
 
   if (rightNode) {

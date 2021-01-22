@@ -3,8 +3,7 @@ import { MerkleNode } from '../models'
 import { createLeafNode, createIntermediateNode } from '../utils'
 
 export class MerkleTree {
-  private root: MerkleNode
-  dictionary: Array<Array<MerkleNode>>
+  private dictionary: Array<Array<MerkleNode>>
 
   constructor(data: string[]) {
     this.dictionary = []
@@ -13,8 +12,6 @@ export class MerkleTree {
     while (parents.length > 1) {
       parents = this.createIntermediateLevel(parents)
     }
-
-    this.root = parents[0]
   }
 
   private addToDictionary(data: Array<MerkleNode>) {
@@ -88,7 +85,9 @@ export class MerkleTree {
   }
 
   public getRoot(): MerkleNode {
-    return this.root
+    const [root] = this.dictionary[this.dictionary.length - 1]
+
+    return root
   }
 
   public getHeight(): number {
@@ -96,9 +95,6 @@ export class MerkleTree {
   }
 
   public getLevel(level: number): Array<string> | undefined {
-    if (level === this.dictionary.length + 1) {
-      return [this.root.value]
-    }
     const result = this.dictionary[level]
 
     if (result) {

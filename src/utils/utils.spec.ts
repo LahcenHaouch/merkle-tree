@@ -25,14 +25,12 @@ describe('utils', () => {
         .update('1')
         .digest('base64'),
     }
-
     const rightNode: MerkleNode = {
       type: MerkleNodeType.LEAF,
       value: createHash('sha256')
         .update('1')
         .digest('base64'),
     }
-
     const expectedIntermediateNode: MerkleNode = {
       type: MerkleNodeType.INTERMEDIATE,
       value: createHash('sha256')

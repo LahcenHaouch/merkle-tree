@@ -7,14 +7,13 @@ describe('merkle-tree', () => {
     const leftValue = createHash('sha256')
       .update('1')
       .digest('base64')
-
     const rightValue = createHash('sha256')
       .update('2')
       .digest('base64')
-
     const expectedRootValue = createHash('sha256')
       .update(leftValue + rightValue)
       .digest('base64')
+
     const result = new MerkleTree(['1', '2'])
 
     expect(result.getRoot().value === expectedRootValue)
@@ -22,6 +21,7 @@ describe('merkle-tree', () => {
 
   test('getHeight() should return the correct number', () => {
     const expectedHeight = 3
+
     const result = new MerkleTree(['1', '2', '3', '4'])
 
     expect(result.getHeight()).toEqual(expectedHeight)

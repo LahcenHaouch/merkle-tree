@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest --watch",
+    "test": "jest --coverage",
+    "test:local": "jest --watch",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },

@@ -1,20 +1,25 @@
-import { createHash } from 'crypto'
-
+import { sha256 } from '../utils'
 import { MerkleTree } from './merkle-tree'
 
 describe('merkle-tree', () => {
+  const leftValue = sha256('1')
+  const rightValue = sha256('2')
   test('getRoot().value should return the correct value', () => {
-    const leftValue = createHash('sha256')
-      .update('1')
-      .digest('base64')
-    const rightValue = createHash('sha256')
-      .update('2')
-      .digest('base64')
-    const expectedRootValue = createHash('sha256')
-      .update(leftValue + rightValue)
-      .digest('base64')
+    const expectedRootValue = sha256(leftValue + rightValue)
 
     const result = new MerkleTree(['1', '2'])
+
+    expect(result.getRoot().value === expectedRootValue)
+  })
+
+  test('getRoot().value for odd number of elements should return the correct value', () => {
+    const lastElementValue = sha256('3')
+
+    const intermediateNodeValue = sha256(leftValue + rightValue)
+
+    const expectedRootValue = sha256(intermediateNodeValue + lastElementValue)
+
+    const result = new MerkleTree(['1', '2', '3'])
 
     expect(result.getRoot().value === expectedRootValue)
   })
@@ -28,14 +33,6 @@ describe('merkle-tree', () => {
   })
 
   test('getLevel() should return an array of hashes', () => {
-    const leftValue = createHash('sha256')
-      .update('1')
-      .digest('base64')
-
-    const rightValue = createHash('sha256')
-      .update('2')
-      .digest('base64')
-
     const result = new MerkleTree(['1', '2'])
 
     const level = result.getLevel(0)

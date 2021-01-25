@@ -10,4 +10,4 @@ Itterating over every node in the firstLevel and check if the hash is the same a
 
 ## What are some Merkle tree use cases?
 
-Versioning systems, databases, p2p system, file storage
+Versioning systems, databases, p2p system, file system

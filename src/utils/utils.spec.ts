@@ -1,15 +1,11 @@
-import { createHash } from 'crypto'
-
 import { MerkleNode, MerkleNodeType } from '../models'
-import { createLeafNode, createIntermediateNode } from './utils'
+import { sha256, createLeafNode, createIntermediateNode } from './utils'
 
 describe('utils', () => {
   test('createLeafNode() should return a valid leaf node', () => {
     const expectedResult: MerkleNode = {
       type: MerkleNodeType.LEAF,
-      value: createHash('sha256')
-        .update('1')
-        .digest('base64'),
+      value: sha256('1'),
     }
 
     const { type, value } = createLeafNode('1')
@@ -21,21 +17,15 @@ describe('utils', () => {
   test('createIntermediateNode() should return a valid intermediate node', () => {
     const leftNode: MerkleNode = {
       type: MerkleNodeType.LEAF,
-      value: createHash('sha256')
-        .update('1')
-        .digest('base64'),
+      value: sha256('1'),
     }
     const rightNode: MerkleNode = {
       type: MerkleNodeType.LEAF,
-      value: createHash('sha256')
-        .update('1')
-        .digest('base64'),
+      value: sha256('2'),
     }
     const expectedIntermediateNode: MerkleNode = {
       type: MerkleNodeType.INTERMEDIATE,
-      value: createHash('sha256')
-        .update(leftNode.value + rightNode.value)
-        .digest('base64'),
+      value: sha256(leftNode.value + rightNode.value),
       left: leftNode,
       right: rightNode,
     }

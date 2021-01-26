@@ -9,8 +9,6 @@ export class MerkleTree {
     this.levels = []
     let parents = this.createLeafLevel(data)
 
-    this.addToLevels(parents)
-
     while (parents.length > 1) {
       parents = this.createIntermediateLevel(parents)
     }
@@ -20,17 +18,20 @@ export class MerkleTree {
     this.levels.push(data)
   }
 
-  private createLeafLevel(data: string[]) {
+  private createLeafLevel(data: string[]): Array<MerkleNode> {
     if (data.length < 2) {
       throw new Error(
         'You need at least two elements to construct a Merkle Tree'
       )
     }
 
-    return data.map(value => createLeafNode(value))
+    const leafLevel = data.map(value => createLeafNode(value))
+    this.addToLevels(leafLevel)
+
+    return leafLevel
   }
 
-  private createIntermediateLevel(data: Array<MerkleNode>) {
+  private createIntermediateLevel(data: Array<MerkleNode>): Array<MerkleNode> {
     const length = data.length
 
     const parents: Array<MerkleNode> = []
